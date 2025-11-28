@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ستور اوف جيمز - Store of Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        'elite-dark': '#0f172a',
+                        'elite-card': '#1e293b',
+                        'pubg-gold': '#fbbf24',
+                        'pes-blue': '#3b82f6',
+                        'fifa-green': '#22c55e',
+                    }
+                }
+            }
+        }
+
+        // دالة التحويل للواتساب
+        function openWhatsApp(item, type) {
+            // ضع رقم الواتساب الخاص بك هنا (مع كود الدولة بدون +)
+            var phoneNumber = "01040234409"; 
+            
+            var text = "";
+            if (type === 'buy') {
+                text = "سلام عليكم، محتاج اشحن: " + item;
+            } else if (type === 'buy_account') {
+                text = "سلام عليكم، محتاج اشتري حساب " + item + "، ممكن التفاصيل؟";
+            } else if (type === 'sell_account') {
+                text = "سلام عليكم، عندي حساب " + item + " وعايز اعرضه للبيع";
+            }
+
+            var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(text);
+            window.open(url, '_blank');
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0b0f19;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        /* تأثيرات الخلفية */
+        .glow-bg {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+        .btn-gradient {
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        }
+        .btn-whatsapp {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-whatsapp:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+        }
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 2px;
+        }
+        .active-tab {
+            background-color: rgba(255,255,255,0.1);
+            border-bottom: 2px solid #fbbf24;
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- خلفية جمالية -->
+    <div class="glow-bg" style="top: 0; right: 0;"></div>
+    <div class="glow-bg" style="bottom: 0; left: 0; background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, rgba(0,0,0,0) 70%);"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-card border-b-0">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pubg-gold to-yellow-200">
+                <i class="fa-solid fa-gamepad mr-2"></i> ستور اوف جيمز
+            </div>
+            <div class="hidden md:flex space-x-8 space-x-reverse text-gray-300 font-medium">
+                <a href="#hero" class="hover:text-white transition">الرئيسية</a>
+                <a href="#pubg" class="hover:text-pubg-gold transition">ببجي</a>
+                <a href="#pes" class="hover:text-pes-blue transition">بيس موبايل</a>
+                <a href="#fifa" class="hover:text-fifa-green transition">فيفا</a>
+            </div>
+            <button class="bg-white/10 hover:bg-white/20 text-white px-5 py-2 rounded-full text-sm font-bold transition">
+                <i class="fa-solid fa-user ml-2"></i> تسجيل الدخول
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="relative pt-32 pb-20 px-6 text-center">
+        <div class="container mx-auto">
+            <span class="text-pubg-gold font-bold tracking-wider text-sm uppercase mb-4 block">Store of Games - المتجر الأفضل للألعاب</span>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                اشحن ألعابك <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">بسرعة وأمان</span>
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+                وجهتك الأولى لبيع وشراء الحسابات وشحن العملات بأفضل الأسعار. تواصل معنا مباشرة عبر الواتساب.
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#pubg" class="btn-gradient px-8 py-4 rounded-xl font-bold text-white shadow-lg flex items-center">
+                    <i class="fa-solid fa-bolt ml-2"></i> اشحن الآن
+                </a>
+                <button onclick="openWhatsApp('استفسار عام', 'buy')" class="btn-whatsapp px-8 py-4 rounded-xl font-bold text-white transition flex items-center">
+                    <i class="fa-brands fa-whatsapp ml-2"></i> تواصل معنا
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="container mx-auto px-6 py-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-card p-6 rounded-2xl text-center">
+                <div class="text-3xl font-bold text-pubg-gold mb-1">+5000</div>
+                <div class="text-gray-400 text-sm">عميل سعيد</div>
+            </div>
+            <div class="glass-card p-6 rounded-2xl text-center">
+                <div class="text-3xl font-bold text-pes-blue mb-1">24/7</div>
+                <div class="text-gray-400 text-sm">دعم فني</div>
+            </div>
+            <div class="glass-card p-6 rounded-2xl text-center">
+                <div class="text-3xl font-bold text-fifa-green mb-1">100%</div>
+                <div class="text-gray-400 text-sm">ضمان وأمان</div>
+            </div>
+            <div class="glass-card p-6 rounded-2xl text-center">
+                <div class="text-3xl font-bold text-purple-500 mb-1">+10K</div>
+                <div class="text-gray-400 text-sm">عملية شحن</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PUBG SECTION -->
+    <section id="pubg" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-pubg-gold/20 text-pubg-gold mb-4 text-3xl">
+                    <i class="fa-solid fa-parachute-box"></i>
+                </div>
+                <h2 class="text-4xl font-bold section-title">PUBG Mobile</h2>
+            </div>
+
+            <!-- Control Tabs -->
+            <div class="flex justify-center mb-10 bg-white/5 p-1 rounded-xl w-fit mx-auto">
+                <button onclick="switchTab('pubg', 'topup')" class="px-6 py-2 rounded-lg font-bold text-sm transition active-tab" id="btn-pubg-topup">شحن شدات</button>
+                <button onclick="switchTab('pubg', 'buy')" class="px-6 py-2 rounded-lg font-bold text-sm text-gray-400 hover:text-white transition" id="btn-pubg-buy">شراء حسابات</button>
+                <button onclick="switchTab('pubg', 'sell')" class="px-6 py-2 rounded-lg font-bold text-sm text-gray-400 hover:text-white transition" id="btn-pubg-sell">بيع حسابك</button>
+            </div>
+
+            <!-- Topup Content (Default) -->
+            <div id="content-pubg-topup" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card rounded-2xl p-4 relative group overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg z-10">خصم 10%</div>
+                    <div class="h-40 bg-gradient-to-b from-yellow-900/50 to-transparent rounded-xl mb-4 flex items-center justify-center">
+                        <img src="https://placehold.co/200x200/fbbf24/000000?text=60+UC&font=montserrat" class="h-32 object-contain drop-shadow-2xl group-hover:scale-110 transition duration-300" alt="60 UC">
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">60 شدة</h3>
+                    <p class="text-gray-400 text-xs mb-4">شحن فوري عن طريق الـ ID</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-pubg-gold">30 ج.م</span>
+                        <button onclick="openWhatsApp('60 شدة ببجي', 'buy')" class="bg-white/10 hover:bg-green-500 hover:text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card rounded-2xl p-4 relative group overflow-hidden">
+                    <div class="h-40 bg-gradient-to-b from-yellow-900/50 to-transparent rounded-xl mb-4 flex items-center justify-center">
+                        <img src="https://placehold.co/200x200/fbbf24/000000?text=325+UC&font=montserrat" class="h-32 object-contain drop-shadow-2xl group-hover:scale-110 transition duration-300" alt="325 UC">
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">325 شدة</h3>
+                    <p class="text-gray-400 text-xs mb-4">باكدج التوفير + 25 شدة هدية</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-pubg-gold">150 ج.م</span>
+                        <button onclick="openWhatsApp('325 شدة ببجي', 'buy')" class="bg-white/10 hover:bg-green-500 hover:text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card rounded-2xl p-4 relative group overflow-hidden border-pubg-gold/30 border">
+                    <div class="absolute top-0 right-0 bg-pubg-gold text-black text-xs font-bold px-3 py-1 rounded-bl-lg z-10">الأكثر مبيعاً</div>
+                    <div class="h-40 bg-gradient-to-b from-yellow-900/50 to-transparent rounded-xl mb-4 flex items-center justify-center">
+                        <img src="https://placehold.co/200x200/fbbf24/000000?text=660+UC&font=montserrat" class="h-32 object-contain drop-shadow-2xl group-hover:scale-110 transition duration-300" alt="660 UC">
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">660 شدة</h3>
+                    <p class="text-gray-400 text-xs mb-4">افتح الرويال باس فوراً</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-pubg-gold">290 ج.م</span>
+                        <button onclick="openWhatsApp('660 شدة ببجي', 'buy')" class="bg-pubg-gold text-black w-full py-2 rounded-lg font-bold hover:brightness-110 transition flex items-center justify-center gap-2">
+                             شراء <i class="fa-brands fa-whatsapp"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                 <div class="glass-card rounded-2xl p-4 relative group overflow-hidden">
+                    <div class="h-40 bg-gradient-to-b from-yellow-900/50 to-transparent rounded-xl mb-4 flex items-center justify-center">
+                        <img src="https://placehold.co/200x200/fbbf24/000000?text=1800+UC&font=montserrat" class="h-32 object-contain drop-shadow-2xl group-hover:scale-110 transition duration-300" alt="1800 UC">
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">1800 شدة</h3>
+                    <p class="text-gray-400 text-xs mb-4">للشحينة الكبار فقط</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-pubg-gold">750 ج.م</span>
+                        <button onclick="openWhatsApp('1800 شدة ببجي', 'buy')" class="bg-white/10 hover:bg-green-500 hover:text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buy Accounts -->
+            <div id="content-pubg-buy" class="hidden text-center py-10 glass-card rounded-2xl">
+                <i class="fa-solid fa-shop text-6xl text-gray-600 mb-4"></i>
+                <h3 class="text-2xl font-bold">سوق الحسابات</h3>
+                <p class="text-gray-400 mb-6">يوجد لدينا حسابات مميزة (ميثك فاشون، أسلحة مطورة). تواصل معنا لرؤية العروض.</p>
+                <button onclick="openWhatsApp('ببجي موبايل', 'buy_account')" class="btn-whatsapp px-8 py-3 rounded-lg text-white font-bold flex items-center justify-center mx-auto gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> اضغط هنا للشراء (واتساب)
+                </button>
+            </div>
+            
+            <!-- Sell Accounts -->
+            <div id="content-pubg-sell" class="hidden text-center py-10 glass-card rounded-2xl">
+                <i class="fa-solid fa-hand-holding-dollar text-6xl text-gray-600 mb-4"></i>
+                <h3 class="text-2xl font-bold">اعرض حسابك للبيع</h3>
+                <p class="text-gray-400 mb-6">سنقوم بتقييم حسابك وعرضه على آلاف المشترين. أرسل لنا تفاصيل وفيديو الحساب.</p>
+                <button onclick="openWhatsApp('ببجي موبايل', 'sell_account')" class="btn-whatsapp px-8 py-3 rounded-lg text-white font-bold flex items-center justify-center mx-auto gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> اضغط هنا لبيع حسابك (واتساب)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PES (eFootball) SECTION -->
+    <section id="pes" class="py-20 bg-slate-900/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-pes-blue/20 text-pes-blue mb-4 text-3xl">
+                    <i class="fa-solid fa-futbol"></i>
+                </div>
+                <h2 class="text-4xl font-bold section-title">eFootball Mobile</h2>
+            </div>
+
+             <!-- Control Tabs -->
+             <div class="flex justify-center mb-10 bg-white/5 p-1 rounded-xl w-fit mx-auto">
+                <button onclick="switchTab('pes', 'topup')" class="px-6 py-2 rounded-lg font-bold text-sm transition active-tab" id="btn-pes-topup">شحن كوينز</button>
+                <button onclick="switchTab('pes', 'buy')" class="px-6 py-2 rounded-lg font-bold text-sm text-gray-400 hover:text-white transition" id="btn-pes-buy">شراء تشكيلة</button>
+                <button onclick="switchTab('pes', 'sell')" class="px-6 py-2 rounded-lg font-bold text-sm text-gray-400 hover:text-white transition" id="btn-pes-sell">بيع تشكيلة</button>
+            </div>
+
+            <div id="content-pes-topup" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card rounded-2xl p-6 relative group overflow-hidden">
+                    <div class="h-40 bg-gradient-to-b from-blue-900/50 to-transparent rounded-xl mb-4 flex items-center justify-center">
+                        <img src="https://placehold.co/200x200/3b82f6/ffffff?text=130+Coins&font=montserrat" class="h-28 object-contain drop-shadow-2xl" alt="Coins">
+                    </div>
+                    <h3 class="text-xl font-bold">130 كوينز</h3>
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-2xl font-bold text-pes-blue">50 ج.م</span>
+                        <button onclick="openWhatsApp('130 كوينز بيس', 'buy')" class="bg-pes-blue text-white px-6 py-2 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition flex gap-2 items-center">
+                            شراء <i class="fa-brands fa-whatsapp"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                 <div class="glass-card rounded-2xl p-6 relative group overflow-hidden border border-pes-blue/30">
+                    <div class="absolute top-0 left-0 bg-pes-blue text-white text-xs font-bold px-3 py-1 rounded-br-lg z-10">Best Value</div>
+                    <div class="h-40 bg-gradient-to-b from-blue-900/50 to-transparent rounded-xl mb-4 flex items-center justify-center">
+                        <img src="https://placehold.co/200x200/3b82f6/ffffff?text=1050+Coins&font=montserrat" class="h-28 object-contain drop-shadow-2xl" alt="Coins">
+                    </div>
+                    <h3 class="text-xl font-bold">1050 كوينز</h3>
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-2xl font-bold text-pes-blue">380 ج.م</span>
+                        <button onclick="openWhatsApp('1050 كوينز بيس', 'buy')" class="bg-pes-blue text-white px-6 py-2 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition flex gap-2 items-center">
+                            شراء <i class="fa-brands fa-whatsapp"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card rounded-2xl p-6 relative group overflow-hidden">
+                    <div class="h-40 bg-gradient-to-b from-blue-900/50 to-transparent rounded-xl mb-4 flex items-center justify-center">
+                        <img src="https://placehold.co/200x200/3b82f6/ffffff?text=2150+Coins&font=montserrat" class="h-28 object-contain drop-shadow-2xl" alt="Coins">
+                    </div>
+                    <h3 class="text-xl font-bold">2150 كوينز</h3>
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-2xl font-bold text-pes-blue">750 ج.م</span>
+                        <button onclick="openWhatsApp('2150 كوينز بيس', 'buy')" class="bg-pes-blue text-white px-6 py-2 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition flex gap-2 items-center">
+                            شراء <i class="fa-brands fa-whatsapp"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PES Buy/Sell -->
+             <div id="content-pes-buy" class="hidden text-center py-10 glass-card rounded-2xl">
+                <h3 class="text-2xl font-bold mb-4">تشكيلات نادرة</h3>
+                <p class="text-gray-400 mb-6">ابحث عن التشكيلة المثالية لفريقك.</p>
+                <button onclick="openWhatsApp('بيس موبايل', 'buy_account')" class="btn-whatsapp px-8 py-3 rounded-lg text-white font-bold flex items-center justify-center mx-auto gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> اضغط هنا للشراء (واتساب)
+                </button>
+            </div>
+            <div id="content-pes-sell" class="hidden text-center py-10 glass-card rounded-2xl">
+                <h3 class="text-2xl font-bold mb-4">بيع تشكيلتك</h3>
+                <p class="text-gray-400 mb-6">اعرض تشكيلتك للبيع بأفضل سعر.</p>
+                <button onclick="openWhatsApp('بيس موبايل', 'sell_account')" class="btn-whatsapp px-8 py-3 rounded-lg text-white font-bold flex items-center justify-center mx-auto gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> اضغط هنا للبيع (واتساب)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FIFA (FC Mobile) SECTION -->
+    <section id="fifa" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-fifa-green/20 text-fifa-green mb-4 text-3xl">
+                    <i class="fa-regular fa-futbol"></i>
+                </div>
+                <h2 class="text-4xl font-bold section-title">FC Mobile 24</h2>
+            </div>
+
+             <!-- Control Tabs -->
+             <div class="flex justify-center mb-10 bg-white/5 p-1 rounded-xl w-fit mx-auto">
+                <button onclick="switchTab('fifa', 'topup')" class="px-6 py-2 rounded-lg font-bold text-sm transition active-tab" id="btn-fifa-topup">FC Points</button>
+                <button onclick="switchTab('fifa', 'buy')" class="px-6 py-2 rounded-lg font-bold text-sm text-gray-400 hover:text-white transition" id="btn-fifa-buy">شراء حساب</button>
+                <button onclick="switchTab('fifa', 'sell')" class="px-6 py-2 rounded-lg font-bold text-sm text-gray-400 hover:text-white transition" id="btn-fifa-sell">بيع حساب</button>
+            </div>
+
+            <div id="content-fifa-topup" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- FC Points Cards -->
+                <div class="glass-card p-5 rounded-xl border-t-4 border-fifa-green hover:bg-white/5 transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <img src="https://placehold.co/100x100/22c55e/ffffff?text=FP&font=montserrat" class="w-12 h-12 rounded-full" alt="FC Points">
+                        <span class="bg-fifa-green/20 text-fifa-green text-xs font-bold px-2 py-1 rounded">Mobile</span>
+                    </div>
+                    <h3 class="text-lg font-bold">500 FC Points</h3>
+                    <div class="my-4 border-t border-white/10"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white">120 ج.م</span>
+                        <button onclick="openWhatsApp('500 FC Points', 'buy')" class="text-fifa-green hover:text-white hover:bg-fifa-green p-2 rounded-full transition">
+                            <i class="fa-solid fa-arrow-left transform -rotate-45 text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 rounded-xl border-t-4 border-fifa-green hover:bg-white/5 transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <img src="https://placehold.co/100x100/22c55e/ffffff?text=FP&font=montserrat" class="w-12 h-12 rounded-full" alt="FC Points">
+                        <span class="bg-fifa-green/20 text-fifa-green text-xs font-bold px-2 py-1 rounded">Hot</span>
+                    </div>
+                    <h3 class="text-lg font-bold">1050 FC Points</h3>
+                    <div class="my-4 border-t border-white/10"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white">240 ج.م</span>
+                        <button onclick="openWhatsApp('1050 FC Points', 'buy')" class="text-fifa-green hover:text-white hover:bg-fifa-green p-2 rounded-full transition">
+                            <i class="fa-solid fa-arrow-left transform -rotate-45 text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="glass-card p-5 rounded-xl border-t-4 border-fifa-green hover:bg-white/5 transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <img src="https://placehold.co/100x100/22c55e/ffffff?text=FP&font=montserrat" class="w-12 h-12 rounded-full" alt="FC Points">
+                    </div>
+                    <h3 class="text-lg font-bold">2200 FC Points</h3>
+                    <div class="my-4 border-t border-white/10"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white">450 ج.م</span>
+                        <button onclick="openWhatsApp('2200 FC Points', 'buy')" class="text-fifa-green hover:text-white hover:bg-fifa-green p-2 rounded-full transition">
+                            <i class="fa-solid fa-arrow-left transform -rotate-45 text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="glass-card p-5 rounded-xl border-t-4 border-fifa-green hover:bg-white/5 transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <img src="https://placehold.co/100x100/22c55e/ffffff?text=FP&font=montserrat" class="w-12 h-12 rounded-full" alt="FC Points">
+                        <span class="bg-fifa-green/20 text-fifa-green text-xs font-bold px-2 py-1 rounded">VIP</span>
+                    </div>
+                    <h3 class="text-lg font-bold">5750 FC Points</h3>
+                    <div class="my-4 border-t border-white/10"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white">1100 ج.م</span>
+                        <button onclick="openWhatsApp('5750 FC Points', 'buy')" class="text-fifa-green hover:text-white hover:bg-fifa-green p-2 rounded-full transition">
+                            <i class="fa-solid fa-arrow-left transform -rotate-45 text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FIFA Buy/Sell -->
+            <div id="content-fifa-buy" class="hidden text-center py-10 glass-card rounded-2xl">
+                <h3 class="text-2xl font-bold mb-4">متجر حسابات فيفا</h3>
+                <p class="text-gray-400 mb-6">اشتري فريق أحلامك الآن.</p>
+                <button onclick="openWhatsApp('فيفا موبايل', 'buy_account')" class="btn-whatsapp px-8 py-3 rounded-lg text-white font-bold flex items-center justify-center mx-auto gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> اضغط هنا للشراء (واتساب)
+                </button>
+            </div>
+            <div id="content-fifa-sell" class="hidden text-center py-10 glass-card rounded-2xl">
+                <h3 class="text-2xl font-bold mb-4">اعرض فريقك للبيع</h3>
+                <p class="text-gray-400 mb-6">هل لديك فريق قوي؟ اعرضه للبيع الآن.</p>
+                <button onclick="openWhatsApp('فيفا موبايل', 'sell_account')" class="btn-whatsapp px-8 py-3 rounded-lg text-white font-bold flex items-center justify-center mx-auto gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> اضغط هنا للبيع (واتساب)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-10 border-t border-white/10" id="contact">
+        <div class="container mx-auto px-6 text-center md:text-right">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold text-white mb-2">ستور اوف جيمز</h3>
+                    <p class="text-gray-500">جميع الحقوق محفوظة &copy; 2025</p>
+                </div>
+                <div class="flex space-x-6 space-x-reverse mb-6 md:mb-0 text-2xl">
+                    <a href="#" class="text-gray-400 hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-green-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+                <div>
+                    <p class="text-gray-500 mb-2 text-sm">طرق الدفع المتاحة</p>
+                    <div class="flex gap-2 justify-center md:justify-end">
+                        <div class="bg-white/10 px-3 py-1 rounded text-xs">Vodafone Cash</div>
+                        <div class="bg-white/10 px-3 py-1 rounded text-xs">InstaPay</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(game, action) {
+            // Hide all content for this game
+            document.getElementById(`content-${game}-topup`).classList.add('hidden');
+            document.getElementById(`content-${game}-buy`).classList.add('hidden');
+            document.getElementById(`content-${game}-sell`).classList.add('hidden');
+
+            // Reset buttons style for this game
+            const buttons = ['topup', 'buy', 'sell'];
+            buttons.forEach(btn => {
+                const el = document.getElementById(`btn-${game}-${btn}`);
+                el.classList.remove('active-tab');
+                el.classList.add('text-gray-400');
+                el.classList.remove('text-white'); // Ensure white text is removed when inactive
+            });
+
+            // Show selected content
+            document.getElementById(`content-${game}-${action}`).classList.remove('hidden');
+
+            // Highlight selected button
+            const activeBtn = document.getElementById(`btn-${game}-${action}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-gray-400');
+        }
+    </script>
+</body>
+</html>
